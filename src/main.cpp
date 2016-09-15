@@ -59,30 +59,26 @@ void loop() {
   current_world = (current_world + 1) % 2;
   World& new_world = worlds[current_world];
 
-  for (uint8_t x = 0; x < XSIZE; ++x) {
-    for (uint8_t y = 0; y < YSIZE; ++y) {
-      auto n = old_world.live_neighbours(x, y);
-      bool live = old_world.is_live(x, y)
-	? (n == 2 || n == 3) : (n == 3);
-      new_world.set_live(x, y, live);
-    }
-  }
-
+  matrix.clear();
   bool any_changes = false;
 
-  matrix.clear();
-  for (uint x = 0; x < XSIZE; ++x) {
-    for (uint y = 0; y < YSIZE; ++y) {
-      auto live = new_world.is_live(x, y);
+  for (uint8_t x = 0; x < XSIZE; ++x) {
+    for (uint8_t y = 0; y < YSIZE; ++y) {
+      auto old_live = old_world.is_live(x, y);
+      auto n = old_world.live_neighbours(x, y);
+
+      bool live = old_live ? (n == 2 || n == 3) : (n == 3);
+
       if (!any_changes) {
-	auto old_live = old_world.is_live(x, y);
 	any_changes = (live != old_live);
       }
+
+      new_world.set_live(x, y, live);
       matrix.drawPixel(x, y, live ? LED_GREEN : 0);
     }
   }
-  matrix.writeDisplay();
 
+  matrix.writeDisplay();
   delay(500);
 
   if (!any_changes) {
