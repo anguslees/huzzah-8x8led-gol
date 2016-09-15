@@ -3,6 +3,8 @@ Conway's Game of Life for the Adafruit
 [Huzzah](https://www.adafruit.com/product/2821) / [8x8 LED matrix](https://www.adafruit.com/product/902).
 Will almost certainly work on near variations too.
 
+[![Build Status](https://travis-ci.org/anguslees/huzzah-8x8led-gol.svg?branch=master)](https://travis-ci.org/anguslees/huzzah-8x8led-gol)
+
 # Build
 
 Install [platformio](http://platformio.org/) if you haven't already:
