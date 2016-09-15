@@ -19,3 +19,8 @@ To build and upload this project:
 ```console
 % platformio run --target upload
 ```
+
+If you're extra keen, you can run some test cases on your device with:
+```console
+% platformio test -e huzzah --verbose
+```

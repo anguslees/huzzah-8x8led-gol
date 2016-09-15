@@ -1,46 +1,23 @@
 #include <Wire.h>
-#include "Adafruit_LEDBackpack.h"
-#include "Adafruit_GFX.h"
+#include <Adafruit_LEDBackpack.h>
+#include <Adafruit_GFX.h>
+
+#include "world.h"
 
 Adafruit_BicolorMatrix matrix = Adafruit_BicolorMatrix();
 
-const uint8_t XSIZE = 8;
-const uint8_t YSIZE = 8;
+World worlds[2];
+uint8_t current_world;
 
-class World {
-public:
-  uint live_neighbours(uint8_t x, uint8_t y) const;
-  void set_live(uint8_t x, uint8_t y, bool live) {
-    world[x][y] = live;
-  }
-  bool is_live(int8_t x, int8_t y) const {
-    return world[x % XSIZE][y % YSIZE];
-  }
-private:
-  bool world[XSIZE][YSIZE];
-};
-
-uint World::live_neighbours(uint8_t x, uint8_t y) const {
-  return (is_live(x-1, y-1) +
-	  is_live(x-1, y) +
-	  is_live(x-1, y+1) +
-	  is_live(x, y-1) +
-	  is_live(x, y+1) +
-	  is_live(x+1, y-1) +
-	  is_live(x+1, y) +
-	  is_live(x+1, y+1));
-}
-
-static World worlds[2];
-static uint8_t current_world;
-
-static void randomise_world(World& world) {
+void randomise_world(World& world) {
   for (uint8_t x = 0; x < XSIZE; ++x)
     for (uint8_t y = 0; y < YSIZE; ++y) {
       bool state = random(2);
       world.set_live(x, y, state);
     }
 }
+
+#ifndef UNIT_TEST
 
 void setup() {
   Serial.begin(9600);
@@ -86,3 +63,5 @@ void loop() {
     randomise_world(new_world);
   }
 }
+
+#endif
