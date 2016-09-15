@@ -1,4 +1,4 @@
-#include <Wire.h>
+#include <stdint.h>
 
 const uint8_t XSIZE = 8;
 const uint8_t YSIZE = 8;
@@ -10,6 +10,7 @@ static uint8_t absmod(int8_t i, int8_t n) {
 
 class World {
  public:
+  void randomise();
   uint8_t live_neighbours(uint8_t x, uint8_t y) const;
   void set_live(uint8_t x, uint8_t y, bool live) {
     world[x][y] = live;

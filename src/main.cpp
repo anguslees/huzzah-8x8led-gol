@@ -1,3 +1,7 @@
+#ifndef UNIT_TEST
+
+#ifdef ARDUINO
+
 #include <Wire.h>
 #include <Adafruit_LEDBackpack.h>
 #include <Adafruit_GFX.h>
@@ -9,16 +13,6 @@ Adafruit_BicolorMatrix matrix = Adafruit_BicolorMatrix();
 World worlds[2];
 uint8_t current_world;
 
-void randomise_world(World& world) {
-  for (uint8_t x = 0; x < XSIZE; ++x)
-    for (uint8_t y = 0; y < YSIZE; ++y) {
-      bool state = random(2);
-      world.set_live(x, y, state);
-    }
-}
-
-#ifndef UNIT_TEST
-
 void setup() {
   Serial.begin(9600);
   Serial.println("Starting up");
@@ -28,7 +22,7 @@ void setup() {
   matrix.begin(0x70);  // pass in the address
 
   current_world = 0;
-  randomise_world(worlds[current_world]);
+  worlds[current_world].randomise();
 }
 
 void loop() {
@@ -60,8 +54,15 @@ void loop() {
 
   if (!any_changes) {
     delay(3000);
-    randomise_world(new_world);
+    new_world.randomise();
   }
 }
 
+#else /* !ARDUINO */
+
+int main(int argc, char **argv) {
+  return 0;
+}
+
+#endif
 #endif

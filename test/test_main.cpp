@@ -1,12 +1,15 @@
+#ifdef ARDUINO
 #include <Arduino.h>
 #include <Wire.h>
+#else
+#include <stdint.h>
+#endif
+
 #include <unity.h>
 
 #include "world.h"
 
 #ifdef UNIT_TEST
-
-extern void randomise_world(World& world);
 
 void test_world() {
   World w;
@@ -41,7 +44,7 @@ void test_world() {
 
 void test_randomise() {
   World w;
-  randomise_world(w);
+  w.randomise();
 
   int count = 0;
   for (uint8_t x = 0; x < XSIZE; ++x)
@@ -53,19 +56,33 @@ void test_randomise() {
   TEST_ASSERT_INT_WITHIN(10, (XSIZE*YSIZE)/2, count);
 }
 
-void setup() {
-  Serial.begin(9600);
-
+static void run_tests() {
   UNITY_BEGIN();
-
-  randomSeed(os_random());
 
   RUN_TEST(test_world);
   RUN_TEST(test_randomise);
+
+  UNITY_END();
+}
+
+#ifdef ARDUINO
+
+void setup() {
+  randomSeed(os_random());
+  run_tests();
 }
 
 void loop() {
-  UNITY_END();
+  delay(500);
 }
+
+#else
+
+int main(int argc, char **argv) {
+  run_tests();
+  return 0;
+}
+
+#endif
 
 #endif
